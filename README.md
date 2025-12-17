@@ -20,13 +20,21 @@ This project converts numeric values (`decimal.Decimal`) into **Thai Baht text f
 
 ---
 
-## 🧠 Example
+## 🚀 Quick Start
+
+Install the package in your Go project
+
+```bash
+go get github.com/idea2409/decimal-to-thb-text
+```
+
+Example usage:
 
 ```go
 package main
 
 import (
-	numtocurrencytext "decimal-to-thb-text/pkg/numToCurrencyText"
+	numtocurrencytext "github.com/idea2409/decimal-to-thb-text/pkg/numToCurrencyText"
 	"fmt"
 
 	"github.com/shopspring/decimal"
@@ -57,7 +65,7 @@ Output:
 Clone the repository
 
 ```bash
-git clone https://github.com/nuelcas/mybrandname.git
+git clone https://github.com/idea2409/decimal-to-thb-text.git
 ```
 
 Make sure you have **Go** installed (Go 1.20+ recommended).
