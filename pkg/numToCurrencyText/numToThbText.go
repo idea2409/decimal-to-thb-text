@@ -1,8 +1,8 @@
 package numtocurrencytext
 
 import (
-	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/shopspring/decimal"
 )
@@ -59,47 +59,51 @@ var (
 )
 
 func integerToThbText(integer decimal.Decimal) string {
-	output := ""
+	var builder strings.Builder
 
 	// split to array of 6-digit group
-	millions := []decimal.Decimal{}
-	for integer.Cmp(oneMillion) != -1 {
+	var millions []decimal.Decimal
+	for integer.Cmp(oneMillion) >= 0 { // while integer >= 1M
 		millions = append(millions, integer.Mod(oneMillion))
 		integer = integer.Div(oneMillion).Floor()
 	}
 	millions = append(millions, integer)
 
-	// reverse array to make it be sorted
 	slices.Reverse(millions)
 
 	for i, m := range millions {
-		for j, v := range m.String() {
-			digit := fmt.Sprintf("%c", v)
-			unitIndex := len(m.String()) - j - 1
+		mStr := m.String()
+		mLength := len(mStr)
+
+		for j, ch := range mStr {
+			digit := byte(ch)
+			unitIndex := mLength - j - 1
 
 			// skip reading digit 0
-			if digit == "0" {
+			if digit == '0' {
 				continue
 			}
 
 			// handle special cases for Thai numbering rules
-			if digit == "1" && unitIndex == 0 && len(m.String()) > 1 { // handle when "1" is at the "เอ็ด" position
-				output += "เอ็ด"
-			} else if digit == "2" && unitIndex == 1 { // handle when "2" is at the "ยี่" position
-				output += "ยี่"
-			} else if !(digit == "1" && unitIndex == 1) { // ignore the digit when "1" is at the "สิบ" position
-				output += mapTextOfNum[digit]
+			if !(digit == '1' && unitIndex == 1) { // ignore the digit when "1" is at the "สิบ" position
+				switch {
+				case digit == '1' && unitIndex == 0 && mLength > 1: // handle when "1" is at the "เอ็ด" position
+					builder.WriteString("เอ็ด")
+				case digit == '2' && unitIndex == 1: // handle when "2" is at the "ยี่" position
+					builder.WriteString("ยี่")
+				default:
+					builder.WriteString(mapTextOfNum[string(digit)])
+				}
 			}
-
 			// add unit
-			output += thaiUnits[unitIndex]
+			builder.WriteString(thaiUnits[unitIndex])
 		}
 
 		// add when not the last million group
 		if i < len(millions)-1 {
-			output += "ล้าน"
+			builder.WriteString("ล้าน")
 		}
 	}
 
-	return output
+	return builder.String()
 }
