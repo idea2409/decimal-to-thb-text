@@ -1,9 +1,9 @@
 package main
 
 import (
-	numtocurrencytext "decimal-to-thb-text/pkg/numToCurrencyText"
 	"fmt"
 
+	numtocurrencytext "github.com/idea2409/decimal-to-thb-text/pkg/numToCurrencyText"
 	"github.com/shopspring/decimal"
 )
 
