@@ -78,7 +78,7 @@ go test ./pkg/numToCurrencyText
 ```
 
 ## 📂 Project Structure
-
+```
 .
 ├── go.mod
 ├── go.sum
@@ -89,3 +89,4 @@ go test ./pkg/numToCurrencyText
 │ ├── converter.go
 │ └── converter_test.go
 └── README.md
+```
