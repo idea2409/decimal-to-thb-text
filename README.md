@@ -19,6 +19,7 @@ It supports:
   - "1" at the "เอ็ด" position
   - "1" at the 'ten' position
   - "2" at the "ยี่" position
+  - the suffix "ถ้วน" when no fractional part
 - Negative numbers will be tagged as "ติดลบ"
 - Zero will be returned as "ศูนย์บาทถ้วน"
 - Simple API: `NumToThbText(decimal.Decimal)`
