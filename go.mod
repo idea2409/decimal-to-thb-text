@@ -1,4 +1,4 @@
-module decimal-to-thb-text
+module github.com/idea2409/decimal-to-thb-text
 
 go 1.22.5
 
