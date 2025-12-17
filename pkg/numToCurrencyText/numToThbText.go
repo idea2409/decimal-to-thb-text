@@ -1,7 +1,6 @@
 package numtocurrencytext
 
 import (
-	"slices"
 	"strings"
 
 	"github.com/shopspring/decimal"
@@ -58,52 +57,62 @@ var (
 	}
 )
 
-func integerToThbText(integer decimal.Decimal) string {
-	var builder strings.Builder
-
-	// split to array of 6-digit group
-	var millions []decimal.Decimal
-	for integer.Cmp(oneMillion) >= 0 { // while integer >= 1M
-		millions = append(millions, integer.Mod(oneMillion))
-		integer = integer.Div(oneMillion).Floor()
-	}
-	millions = append(millions, integer)
-
-	slices.Reverse(millions)
-
-	for i, m := range millions {
-		mStr := m.String()
-		mLength := len(mStr)
-
-		for j, ch := range mStr {
-			digit := byte(ch)
-			unitIndex := mLength - j - 1
-
-			// skip reading digit 0
-			if digit == '0' {
-				continue
-			}
-
-			// handle special cases for Thai numbering rules
-			if !(digit == '1' && unitIndex == 1) { // ignore the digit when "1" is at the "สิบ" position
-				switch {
-				case digit == '1' && unitIndex == 0 && mLength > 1: // handle when "1" is at the "เอ็ด" position
-					builder.WriteString("เอ็ด")
-				case digit == '2' && unitIndex == 1: // handle when "2" is at the "ยี่" position
-					builder.WriteString("ยี่")
-				default:
-					builder.WriteString(mapTextOfNum[string(digit)])
-				}
-			}
-			// add unit
-			builder.WriteString(thaiUnits[unitIndex])
-		}
-
-		// add when not the last million group
-		if i < len(millions)-1 {
-			builder.WriteString("ล้าน")
-		}
+// (recursive func)
+func integerToThbText(num decimal.Decimal) string {
+	// ----------- finish loop -----------
+	// when no number to convert
+	if num.Cmp(decimal.Zero) == 0 {
+		return ""
 	}
 
-	return builder.String()
+	// when going to be the last converting
+	if num.Cmp(oneMillion) < 0 {
+		return convertThbSixDigits(num)
+	}
+	// -------------------------------------
+
+	// split to two parts -> low: last 6 digits, high: the prefix part
+	high := num.Div(oneMillion).Floor()
+	low := num.Mod(oneMillion)
+
+	// recursive the prefix to have "ล้าน" at the end
+	output := integerToThbText(high) + "ล้าน"
+
+	// convert the last 6 digits
+	if low.Cmp(decimal.Zero) > 0 {
+		output += convertThbSixDigits(low)
+	}
+
+	return output
+}
+
+func convertThbSixDigits(num decimal.Decimal) string {
+	var b strings.Builder
+	mStr := num.String()
+	mLength := len(mStr)
+
+	for i, ch := range mStr {
+		digit := byte(ch)
+		unitIndex := mLength - i - 1
+
+		if digit == '0' {
+			continue
+		}
+
+		// handle special cases for Thai numbering rules
+		if !(digit == '1' && unitIndex == 1) { // ignore the digit when "1" is at the "สิบ" position
+			switch {
+			case digit == '1' && unitIndex == 0 && mLength > 1: // handle when "1" is at the "เอ็ด" position
+				b.WriteString("เอ็ด")
+			case digit == '2' && unitIndex == 1: // handle when "2" is at the "ยี่" position
+				b.WriteString("ยี่")
+			default:
+				b.WriteString(mapTextOfNum[string(digit)])
+			}
+		}
+		// add unit
+		b.WriteString(thaiUnits[unitIndex])
+	}
+
+	return b.String()
 }
