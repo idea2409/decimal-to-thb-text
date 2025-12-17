@@ -2,14 +2,6 @@
 
 This project converts numeric values (`decimal.Decimal`) into **Thai Baht text format** (บาท / สตางค์).
 
-It supports:
-
-- Arbitrary-precision numbers using `github.com/shopspring/decimal`
-- Proper Thai numbering rules (เอ็ด, ยี่, สิบ, ร้อย, พัน, หมื่น, ...)
-- Automatic separation of integer (บาท) and fractional (สตางค์) parts
-- Rounding down fractional values to 2 decimal places
-- Negative numbers
-
 ---
 
 ## ✨ Features
@@ -22,6 +14,7 @@ It supports:
   - the suffix "ถ้วน" when no fractional part
 - Negative numbers will be tagged as "ติดลบ"
 - Zero will be returned as "ศูนย์บาทถ้วน"
+- Rounding down fractional values to 2 decimal places
 - Simple API: `NumToThbText(decimal.Decimal)`
 - Supports values from **0.00** up to very large numbers (works as long as the input is decimal.Decimal)
 
@@ -59,11 +52,25 @@ Output:
 
 ---
 
-## 🚀 How to Run
+## Setup
+
+Clone the repository
+
+```bash
+git clone https://github.com/nuelcas/mybrandname.git
+```
 
 Make sure you have **Go** installed (Go 1.20+ recommended).
 
-Run the application using:
+Install Dependencies
+
+```bash
+go mod tidy
+```
+
+## 🚀 How to Run
+
+Run the project :
 
 ```bash
 go run main/main.go
@@ -78,6 +85,7 @@ go test ./pkg/numToCurrencyText
 ```
 
 ## 📂 Project Structure
+
 ```text
 .
 ├── go.mod
