@@ -30,12 +30,23 @@ It supports:
 ## 🧠 Example
 
 ```go
-input1 := decimal.RequireFromString("1234")
-input2 := decimal.RequireFromString("621908501.25")
-input3, _ := decimal.NewFromString("123456123456123456.99")
-fmt.Println(numtocurrencytext.NumToThbText(input1))
-fmt.Println(numtocurrencytext.NumToThbText(input2))
-fmt.Println(numtocurrencytext.NumToThbText(input3))
+package main
+
+import (
+	numtocurrencytext "decimal-to-thb-text/pkg/numToCurrencyText"
+	"fmt"
+
+	"github.com/shopspring/decimal"
+)
+
+func main() {
+	input1 := decimal.RequireFromString("1234")
+	input2 := decimal.RequireFromString("621908501.25")
+	input3, _ := decimal.NewFromString("123456123456123456.99")
+	fmt.Println(numtocurrencytext.NumToThbText(input1))
+	fmt.Println(numtocurrencytext.NumToThbText(input2))
+	fmt.Println(numtocurrencytext.NumToThbText(input3))
+}
 ```
 
 Output:
